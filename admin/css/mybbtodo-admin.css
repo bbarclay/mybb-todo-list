@@ -1,0 +1,34 @@
+/**
+ * All of the CSS for your admin-specific functionality should be
+ * included in this file.
+ */
+.task-wrap h2 {
+	margin-top: 1.5em;
+    margin-bottom: 0;
+}
+.task-wrap p {
+    margin: 0;
+    color: #848282;
+}
+table.form-table {
+    border-top: 1px solid #e4e1e1;
+    margin-bottom: 4em;
+}
+table.form-table input {
+    border: 1px solid #dcdada;
+    height: 40px;
+    border-radius: 4px;
+    padding: 0 1em;
+    color: #636161;
+}
+table.form-table span {
+    color: #84bd18;
+}
+textarea#ntxtmsg {
+    height: 250px;
+    width: 25em;
+}
+input.full-width-field {
+    width: 100%;
+    height: 42px;
+}
