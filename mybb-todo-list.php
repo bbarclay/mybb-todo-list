@@ -1,6 +1,6 @@
 <?php 
 /*
-Plugin Name: MyBB To-Do List
+Plugin Name: Business Blueprint To Do
 Version: 1.0
 Description: My BB Todo List.
 Author: July Cabigas
