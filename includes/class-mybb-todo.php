@@ -38,7 +38,7 @@ class Mybb_Todo {
 
 	public function __construct() {
 
-		$this->plugin_name = 'mybb-todo';
+		$this->plugin_name = 'Mybb_Todo';
 		$this->version = '1.0.0';
 		$this->load_dependencies();
 		$this->set_locale();
