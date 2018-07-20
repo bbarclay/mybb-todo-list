@@ -23,63 +23,27 @@
 class Mybb_Todo_Public {
 
 
-	private $plugin_name;
-	protected $template;
-	private $version;
-	private $opt_completed;
+
 	public $client;
 	public $consultant;
+	protected $template;
+	private $plugin_name;
+	private $version;
+	private $opt_completed;
+
 	/**
     * Default functions
     *
     * 
     */
 
-	public function __construct( $plugin_name, $version ) {
+	public function __construct( $plugin_name, $version, $client ) {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 		$this->opt_completed = sanitize_text_field(get_option('completedtask_msg'));
 
-
-
-		//Use to query data from database
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/lib/todo-form-template.php';
-
-		//Shortcode for front end list of tasks
-		add_shortcode( 'frontendtodo', array( $this, 'display_frontend' ) );
-
-
-
-		//Add Base PHP
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/lib/apiconnect.php';
-
-
-
-
-		//Declaring API KEY AND ID
-		$appid  = get_option( 'ontrabb_appid' );
-		$appkey = get_option( 'ontrabb_appkey' );
-
-
-		$ontraDetails = array(
-		    'app_id' => $appid,
-		    'app_key' => $appkey
-		);
-
-		$instance  = ontraconnect::connect($ontraDetails);
-		$this->client = $instance->getData();
-
-
-		//Get consultants members or any ontraport queries
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/lib/todo-consultant-template.php';
-
-        
-
-		//This shortcode show consultant's members task.
-		//add_shortcode( 'consultantviewtodo', array( $this, 'display_members_tasks' ) );
-
-
+		$this->client = $client;
 	}
 
 
@@ -88,9 +52,22 @@ class Mybb_Todo_Public {
     *
     * @return display lists of members  and their tasks that belongs to consultants
     */
-    public function display_members_tasks(  ) {
+    public function display_members_tasks( $atts ) {
 
-    		$consultant = new Mybb_Consultant( $this->client );
+    		
+			$this->atts = $atts;
+
+			$atts = shortcode_atts( array(
+
+				'title' => '',
+				'completed' => 0
+
+			), $this->atts, 'consultantviewtodo' );
+
+
+    		$this->consultant = new Mybb_Consultant( $this->client );
+    		$query =  $this->consultant->get_members();
+    		$total = $this->consultant->get_totalItems();
 
     		if(!is_user_logged_in()) {
     			return 'Please login to view this page';
@@ -103,23 +80,16 @@ class Mybb_Todo_Public {
 				   	    return 'This is a restricted page';
 				   }
     		}
-    		
-			$this->atts = $atts;
 
-			$atts = shortcode_atts( array(
-
-				'title' => '',
-				'completed' => 0
-
-			), $this->atts, 'consultantviewtodo' );
 
 		    ob_start();
 
 			//Display 	
 			require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/members-list-template.php';
 
-			$content = ob_get_clean();
-    		return $content;
+	        $output_string = ob_get_contents();
+	        if (ob_get_contents()) ob_end_clean();
+	        return $output_string;
 
 
     }
@@ -152,8 +122,9 @@ class Mybb_Todo_Public {
 				
 			require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/mybb-todo-display.php';
 
-		$content = ob_get_clean();
-    	return $content;
+        $output_string = ob_get_contents();
+        if (ob_get_contents()) ob_end_clean();
+        return $output_string;
 
 
     }

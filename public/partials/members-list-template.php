@@ -1,6 +1,5 @@
 <?php
   	
-   $query =  Mybb_Consultant::get_members();
 
       	$paged = (int)get_query_var( 'paged', 1 );
 
@@ -22,16 +21,14 @@
 
 
 
-   $total = Mybb_Consultant::get_totalItems(true);
-
 ?>
 <section class="bb-member-list">	
 	<div class="wrap">
 		<div class="wrap-left">
-			   <?php echo '<h3>' . $total .  '</h3>'; ?>
+			   <?php echo '<h3>Your members : ' . $total .  '</h3>'; ?>
 		</div>
 		<div class="wrap-right">
-			<?php echo Mybb_Consultant::display_pagination(); ?>
+			<?php echo $this->consultant->display_pagination(); ?>
 		</div>
 	</div>
    	<div class="view-task">
@@ -47,20 +44,25 @@
 					  		
 					  		$count++;
 
+
 							$user = get_user_by( 'email', $row['email'] );
 
+
 								if($first == 1) {
-									$f_ID = $row['ID'];
+									$f_ID = $row['id'];
 				                    $f_firstname = $row['firstname']; 
 				                    $f_lastname = $row['lastname']; 
 				                    $f_email = $row['email'];
 				                    $f_joinedDate = $row['JoinedBlue_174'];	
 									
-									$f_userID = $user->ID;
+									if( !empty ( $user ) ) {
+										$f_userID = $user->ID;
+									}
 				                    
 				                }
-
-	 	                        $userID = $user->ID;
+				                if( !empty ( $user ) ) {
+	 	                        	$userID = $user->ID;
+	 	                    	}
 								$company = $row['company'];	
 								$country = $row['country'];	
 								$year_level = $row['BBYearLeve_258'];
@@ -198,50 +200,49 @@
 
 					                    $counter = 0;
 
+					                    if( !empty ( $user ) ) {
+					                    	$todos =  $this->consultant->get_todos($f_userID);
+										}
+						                if( !empty ($todos) ) {
+						                        foreach ($todos as $page) {
 
-					                    $todos =  Mybb_Consultant::get_todos($f_userID);
+														$has_subtask = get_post_meta($page->ID, 'subtask_from', true);
 
-					                   	if($todos) {
-					                        foreach ($todos as $page) {
-
-
-													$has_subtask = get_post_meta($page->ID, 'subtask_from', true);
-
-                              						if (!$has_subtask) :
+	                              						if (!$has_subtask) :
 
 
-					                              	 $counter++;
+						                              	 $counter++;
 
-			                                         $id =  $page->ID;
-			                                         $due_date = get_post_meta($id, 'due_date', true);
-			                                         $date = date_create($due_date);
-			                                         $link = get_post_meta($id, 'my_task_link', true);
+				                                         $id =  $page->ID;
+				                                         $due_date = get_post_meta($id, 'due_date', true);
+				                                         $date = date_create($due_date);
+				                                         $link = get_post_meta($id, 'my_task_link', true);
 
-			                                         $consultant = get_post_meta($id, 'consultant', true);
-							                    
+				                                         $consultant = get_post_meta($id, 'consultant', true);
+								                    
 
-										  	?>
-										  	        <tr id="<?php echo $page->ID ?>" class="<?php echo ($consultant) ? 'c-added': '';?>">
-												  		<td><span><?php echo $counter; ?></span></td>
-												  		<td><div class="toggle-content"><?php echo $page->post_title; ?></div>
-												  			<div class="task-content">
-							 	 									<?php echo $page->post_content; ?>
-															</div>
-												  		</td>
-												  		<td><?php echo  Mybb_Consultant::get_status($id) ?>
-												  			<!-- <button class="fa fa-mail-forward"></button> -->
-												  		
-												  		</td>
-												  	</tr>
+											  	?>
+											  	        <tr id="<?php echo $page->ID ?>" class="<?php echo ($consultant) ? 'c-added': '';?>">
+													  		<td><span><?php echo $counter; ?></span></td>
+													  		<td><div class="toggle-content"><?php echo $page->post_title; ?></div>
+													  			<div class="task-content">
+								 	 									<?php echo $page->post_content; ?>
+																</div>
+													  		</td>
+													  		<td><?php echo $this->consultant->get_status($id) ?>
+													  			<!-- <button class="fa fa-mail-forward"></button> -->
+													  		
+													  		</td>
+													  	</tr>
 
-										  	<?php 
+											  	<?php 
 
-										  			endif;
-										  		}
-										  	}
-										  	else {
-										  		echo '<tr><td colspan="3">N/A</td></tr>';
-										  	}
+											  			endif;
+											  		}
+											  	}
+											  	else {
+											  		echo '<tr><td colspan="3">N/A</td></tr>';
+											  	}
 
 								  			wp_reset_postdata(); 
 							

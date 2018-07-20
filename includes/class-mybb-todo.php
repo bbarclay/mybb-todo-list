@@ -60,9 +60,21 @@ class Mybb_Todo {
 
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-mybb-todo-admin.php';
 
+
+		//Use to query data from database
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/lib/todo-form-template.php';
+
+		//Add Base PHP
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/lib/apiconnect.php';
+
+		//Get consultants members or any ontraport queries
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/lib/todo-consultant-template.php';
+
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-mybb-todo-frontend.php';
 
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-mybb-todo-public.php';
+
+
 
 		$this->loader = new Mybb_Todo_Loader();
 
@@ -115,10 +127,36 @@ class Mybb_Todo {
 
 	private function define_public_hooks() {
 
-		$plugin_public = new Mybb_Todo_Public( $this->get_plugin_name(), $this->get_version() );
+		$plugin_public = new Mybb_Todo_Public( $this->get_plugin_name(), $this->get_version(), $this->connect_ontraport() );
+
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
+
+		//This shortcode show consultant's members task.
+		add_shortcode( 'consultantviewtodo', array( $plugin_public, 'display_members_tasks' ) );
+
+		//Shortcode for front end list of tasks
+		add_shortcode( 'frontendtodo', array( $plugin_public, 'display_frontend' ) );
+
+	}
+
+	public function connect_ontraport() {
+
+		//Declaring API KEY AND ID
+		$appid  = get_option( 'ontrabb_appid' );
+		$appkey = get_option( 'ontrabb_appkey' );
+
+
+		$ontraDetails = array(
+		    'app_id' => $appid,
+		    'app_key' => $appkey
+		);
+
+		$instance  = ontraconnect::connect($ontraDetails);
+		$this->client = $instance->getData();
+
+		return $this->client;
 	}
 
 	public function run() {

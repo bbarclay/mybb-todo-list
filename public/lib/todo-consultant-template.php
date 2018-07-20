@@ -6,15 +6,14 @@ class Mybb_Consultant {
 	public $client;
 	private $display_total;
 
-	public function __construct($client = "") {
-
+	public function __construct($client) 
+	{
 		$this->client = $client;
 	}
-	//5.4
-	function get_members() 
-	{
 
-	  $client = $this->client;
+	//5.4
+	public function get_members( ) 
+	{
 
 
 
@@ -39,7 +38,7 @@ class Mybb_Consultant {
 	                             {
 	                              "field":{"field":"owner"},
 	                              "op":"=",
-	                              "value":{"value":"' . self::getID() .'"}
+	                              "value":{"value":"' . $this->get_id() .'"}
 	                             },
 	                             "AND",
 	                             {
@@ -51,7 +50,7 @@ class Mybb_Consultant {
 
 	                            ]',
 
-	         "listFields" => "id, firstname, lastname, email, BBCustomer_165, JoinedBlue_174, title, country, sms_number,BBYearLeve_258",
+	         "listFields" => "id, firstname, lastname, email, BBCustomer_165, JoinedBlue_174, title, country, company, sms_number,BBYearLeve_258",
 	         "start" => $start,
         	 "range" => $range,
         	 'sort' => 'firstname',
@@ -59,7 +58,7 @@ class Mybb_Consultant {
 	    );
 
 
-	  $response = $client->contact()->retrieveMultiple($queryParams);
+	  $response = $this->client->contact()->retrieveMultiple($queryParams);
 	  $response = json_decode($response, true);
 	  $response = $response['data'];
 	  
@@ -67,7 +66,9 @@ class Mybb_Consultant {
 	   return $response;
 
 	}
-	public function getID() {
+
+
+	public function get_id() {
 
 	  $current_user = wp_get_current_user();
 
@@ -91,9 +92,8 @@ class Mybb_Consultant {
         
 	}
 
-	public function get_totalItems($html = false) {
+	public function get_totalItems( ) {
 
-		$client = $this->client;
 	    $queryParams = array(
 	          "condition"     => 
 	                             '[
@@ -101,7 +101,7 @@ class Mybb_Consultant {
 	                             {
 	                              "field":{"field":"owner"},
 	                              "op":"=",
-	                              "value":{"value":"' . self::getID() .'"}
+	                              "value":{"value":"' . $this->get_id() .'"}
 	                             },
 	                             "AND",
 	                             {
@@ -109,31 +109,22 @@ class Mybb_Consultant {
 	                              "op":"IN",
 								  "value":{"list":[{"value":802},{"value":800}]}
 	                             }
-	                             
-
 	                            ]'                
 	    );
 
-	    $response = $client->contact()->retrieveCollectionInfo($queryParams);
+	    $response = $this->client->contact()->retrieveCollectionInfo($queryParams);
 	    $response = json_decode($response, true);
 	    $count = $response["data"]["count"];
 
-
-		if(!$html) {
-			return $count;
-		}
-		else {
-	   		return self::display_total($count);
-	   }
-
+		return $count;
+		
 	}
 
 
 
-	public static function get_todos($author_id) {
+	public function get_todos($author_id) {
 
  		global $wpdb;
-
 
 		$query = $wpdb->get_results(
 
@@ -146,7 +137,6 @@ class Mybb_Consultant {
 				            AND posts.post_type = 'mybb_todo'
 				            AND posts.post_status = 'publish'
 				    
-
 			"
 			, $author_id )
 
@@ -177,23 +167,11 @@ class Mybb_Consultant {
 	}
 
 
-
-	/** ========================
-	*
-	*	TEMPLATING BLOCK
-	* 
-	========================== */
-	
-	public function display_total($total) 
-	{
-		return '<p class="total">Total Members you managed : ' . $total . '</p>';
-	}
-
 	public function display_pagination( $max = 50) 
 	{
 		$output = '';
 
-		$total = self::get_totalItems();
+		$total = $this->get_totalItems();
 
 		if( $total % $max ) {
 	        $lists =  ( $total / $max ) + 1;
@@ -220,8 +198,6 @@ class Mybb_Consultant {
 	    }
    	
 	    return $output;
-        
-
 
 	}
 

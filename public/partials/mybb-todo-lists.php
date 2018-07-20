@@ -22,11 +22,7 @@
                                     
                                          $due_date = get_post_meta($id, 'due_date', true);
                                          $date = date_create($due_date);
-
                                          $link = get_post_meta($id, 'my_task_link', true);
-                             
-
-
                                          $has_consultant = get_post_meta($id, 'consultant', true);
 
                                       
@@ -46,15 +42,12 @@
                                                       <p class="title"><?php echo $page->post_title; ?> 
                                                         <?php if ($has_consultant == '2') {
                                                                   $con = 'Task from Luke';
-
                                                                    echo ' - <span>' . $con . '</span>';
                                                               }
                                                               else if ($has_consultant == '38'){
                                                                   $con = 'Task from Beau';
-
                                                                    echo ' - <span>' . $con . '</span>';
-                                                              } 
-                                                              ?>
+                                                              }  ?>
                                                       </p>
                                                       <?php if($link) { ?>
                                                               <p class="link"><?php echo $link; ?></p> 
