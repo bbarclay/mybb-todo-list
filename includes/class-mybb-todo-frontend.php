@@ -15,61 +15,65 @@ class Mybb_Todo_Frontend {
 		$this->task_completed = sanitize_text_field( get_option('notify_completed_task') );
 		$this->added_suggested_task = sanitize_text_field( get_option('added_suggested_task') );
 
-		add_action("wp_ajax_nopriv_mybbtodo_addpost", array( $this, 'addpost' ));
-    	add_action("wp_ajax_mybbtodo_addpost", array( $this, 'addpost' ));
+		if( is_admin() ) {
 
-    	add_action("wp_ajax_nopriv_mybbtodo_addsubpost", array( $this, 'addsubpost' ));
-    	add_action("wp_ajax_mybbtodo_addsubpost", array( $this, 'addsubpost' ));
+			add_action("wp_ajax_nopriv_mybbtodo_addpost", array( $this, 'addpost' ));
+	    	add_action("wp_ajax_mybbtodo_addpost", array( $this, 'addpost' ));
 
-		add_action("wp_ajax_nopriv_mybbtodo_editpost", array( $this, 'editpost' ));
-    	add_action("wp_ajax_mybbtodo_editpost", array( $this, 'editpost' ));
+	    	add_action("wp_ajax_nopriv_mybbtodo_addsubpost", array( $this, 'addsubpost' ));
+	    	add_action("wp_ajax_mybbtodo_addsubpost", array( $this, 'addsubpost' ));
 
-        add_action("wp_ajax_nopriv_mybbtodo_updateMenuOrder", array( $this, 'updateMenuOrder' ));
-    	add_action("wp_ajax_mybbtodo_updateMenuOrder", array( $this, 'updateMenuOrder' ));
+			add_action("wp_ajax_nopriv_mybbtodo_editpost", array( $this, 'editpost' ));
+	    	add_action("wp_ajax_mybbtodo_editpost", array( $this, 'editpost' ));
 
-    	add_action("wp_ajax_nopriv_mybbtodo_deletepost", array( $this, 'deletepost' ));
-    	add_action("wp_ajax_mybbtodo_deletepost", array( $this, 'deletepost' ));
+	        add_action("wp_ajax_nopriv_mybbtodo_updateMenuOrder", array( $this, 'updateMenuOrder' ));
+	    	add_action("wp_ajax_mybbtodo_updateMenuOrder", array( $this, 'updateMenuOrder' ));
 
-    	add_action("wp_ajax_nopriv_mybbtodo_completedpost", array( $this, 'completedpost' ));
-    	add_action("wp_ajax_mybbtodo_completedpost", array( $this, 'completedpost' ));
+	    	add_action("wp_ajax_nopriv_mybbtodo_deletepost", array( $this, 'deletepost' ));
+	    	add_action("wp_ajax_mybbtodo_deletepost", array( $this, 'deletepost' ));
 
-    	add_action("wp_ajax_nopriv_mybbtodo_undoCompletedpost", array( $this, 'undoCompletedpost' ));
-    	add_action("wp_ajax_mybbtodo_undoCompletedpost", array( $this, 'undoCompletedpost' ));
+	    	add_action("wp_ajax_nopriv_mybbtodo_completedpost", array( $this, 'completedpost' ));
+	    	add_action("wp_ajax_mybbtodo_completedpost", array( $this, 'completedpost' ));
 
-    	add_action("wp_ajax_nopriv_mybbtodo_getPostDetails", array( $this, 'getPostDetails' ));
-    	add_action("wp_ajax_mybbtodo_getPostDetails", array( $this, 'getPostDetails' ));
+	    	add_action("wp_ajax_nopriv_mybbtodo_undoCompletedpost", array( $this, 'undoCompletedpost' ));
+	    	add_action("wp_ajax_mybbtodo_undoCompletedpost", array( $this, 'undoCompletedpost' ));
 
-    	add_action("wp_ajax_nopriv_mybbtodo_backSuggestedpost", array( $this, 'backSuggestedPost' ));
-    	add_action("wp_ajax_mybbtodo_backSuggestedpost", array( $this, 'backSuggestedPost' ));
+	    	add_action("wp_ajax_nopriv_mybbtodo_getPostDetails", array( $this, 'getPostDetails' ));
+	    	add_action("wp_ajax_mybbtodo_getPostDetails", array( $this, 'getPostDetails' ));
 
-
-    	add_action("wp_ajax_nopriv_mybbtodo_moveSuggestedPost", array( $this, 'suggestedpost' ));
-    	add_action("wp_ajax_mybbtodo_moveSuggestedPost", array( $this, 'suggestedpost' ));
+	    	add_action("wp_ajax_nopriv_mybbtodo_backSuggestedpost", array( $this, 'backSuggestedPost' ));
+	    	add_action("wp_ajax_mybbtodo_backSuggestedpost", array( $this, 'backSuggestedPost' ));
 
 
-    	add_action("wp_ajax_nopriv_mmybbtodo_removeSuggestedpost", array( $this, 'removeSuggestedpost' ));
-    	add_action("wp_ajax_mybbtodo_removeSuggestedpost", array( $this, 'removeSuggestedpost' ));
-
-    	add_action("wp_ajax_nopriv_mybbtodo_duedate", array( $this, 'duedate' ));
-    	add_action("wp_ajax_mybbtodo_duedate", array( $this, 'duedate' ));
-
-    	add_action("wp_ajax_nopriv_mybbtodo_getposts", array( $this, 'getposts' ));
-    	add_action("wp_ajax_mybbtodo_getposts", array( $this, 'getposts' ));
+	    	add_action("wp_ajax_nopriv_mybbtodo_moveSuggestedPost", array( $this, 'suggestedpost' ));
+	    	add_action("wp_ajax_mybbtodo_moveSuggestedPost", array( $this, 'suggestedpost' ));
 
 
-    	add_action("wp_ajax_nopriv_getMember_posts", array( $this, 'getMember_posts' ));
-    	add_action("wp_ajax_getMember_posts", array( $this, 'getMember_posts' ));
+	    	add_action("wp_ajax_nopriv_mmybbtodo_removeSuggestedpost", array( $this, 'removeSuggestedpost' ));
+	    	add_action("wp_ajax_mybbtodo_removeSuggestedpost", array( $this, 'removeSuggestedpost' ));
 
-    	add_action("wp_ajax_nopriv_add_member_task", array( $this, 'add_member_task' ));
-    	add_action("wp_ajax_add_member_task", array( $this, 'add_member_task' ));
+	    	add_action("wp_ajax_nopriv_mybbtodo_duedate", array( $this, 'duedate' ));
+	    	add_action("wp_ajax_mybbtodo_duedate", array( $this, 'duedate' ));
+
+	    	add_action("wp_ajax_nopriv_mybbtodo_getposts", array( $this, 'getposts' ));
+	    	add_action("wp_ajax_mybbtodo_getposts", array( $this, 'getposts' ));
 
 
-    	add_action("wp_ajax_nopriv_mybbtodo_completedsubpost", array( $this, 'completedsubpost' ));
-    	add_action("wp_ajax_mybbtodo_completedsubpost", array( $this, 'completedsubpost' ));
+	    	add_action("wp_ajax_nopriv_getMember_posts", array( $this, 'getMember_posts' ));
+	    	add_action("wp_ajax_getMember_posts", array( $this, 'getMember_posts' ));
+
+	    	add_action("wp_ajax_nopriv_add_member_task", array( $this, 'add_member_task' ));
+	    	add_action("wp_ajax_add_member_task", array( $this, 'add_member_task' ));
 
 
-    	add_action("wp_ajax_nopriv_mybbtodo_deletesubtask", array( $this, 'deletesubtask' ));
-    	add_action("wp_ajax_mybbtodo_deletesubtask", array( $this, 'deletesubtask' ));
+	    	add_action("wp_ajax_nopriv_mybbtodo_completedsubpost", array( $this, 'completedsubpost' ));
+	    	add_action("wp_ajax_mybbtodo_completedsubpost", array( $this, 'completedsubpost' ));
+
+
+	    	add_action("wp_ajax_nopriv_mybbtodo_deletesubtask", array( $this, 'deletesubtask' ));
+	    	add_action("wp_ajax_mybbtodo_deletesubtask", array( $this, 'deletesubtask' ));
+
+    	}
     	
 	}
 
