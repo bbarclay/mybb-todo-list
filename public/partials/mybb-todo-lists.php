@@ -2,21 +2,12 @@
     <ul id="task-list" class="task-list">
      <div id="bigdate"></div>
         <?php 
-                    /**
-                    * ==================================================
-                    *
-                    * PENDING TASKS
-                    *
-                    * ==================================================
-                    */
 
                     $count = 0;
                     $query =  Mybb_Template::get_todos();
 
 
-                    // if($query) {
-
-                          foreach ($query as $page) {
+                    foreach ($query as $page) {
                               $count++;
                                          $id =  $page->ID;
                                     
@@ -122,7 +113,15 @@
                                                  
                                             </div>
                                             <div class="btn-col">
-
+                                              <?php 
+                                                $from_suggested = get_post_meta($page->ID,'suggested_id', true); 
+                                                if($from_suggested) {
+                                              ?>
+                                                <span class="btn-suggest w-tip">
+                                                   <i class="tooltip">Add back to suggested tasks</i> 
+                                                   <span class="fa fa-undo"></span>
+                                                </span>
+                                              <?php } ?>  
                                                 <span class="btn-add w-tip">
                                                    <i class="tooltip">Subtasks</i> 
                                                    <span class="fa fa-outdent"></span>
@@ -150,10 +149,6 @@
                  
 
                     <?php
-
-                      // else {
-                      //    Mybb_Template::task_notification('pending');    
-                      // }
 
                       wp_reset_postdata();  
                      ?> 
@@ -220,16 +215,12 @@
   </ul> 
 </div> 
 <div class="suggested-task group-task active">
-    
+       
     <?php 
        $count = 0;
        $total_hide = 0;
        $query =  Mybb_Template::get_suggestedTodos(); 
-
-       
        ?>
-
-
            <?php  
 
             if( $query->have_posts() ) : ?>
@@ -245,11 +236,16 @@
                     $link     = get_post_meta($id, 'my_task_link', true);
                     $is_added = get_post_meta($id, '', true);
 
+                  if( 
+                      ! empty( get_post_meta($id, '_user_id', true) ) && 
+                      in_array( $user_id, $is_added['_user_id'] ) || 
+                      ! empty( get_post_meta($id, 'removed_by_user_id', true) ) 
+                      && in_array( $user_id, $is_added['removed_by_user_id'] ) 
+                    )  {
 
-                  if( !empty(get_post_meta($id, '_user_id', true)) && in_array($user_id, $is_added['_user_id']) || 
-                      !empty(get_post_meta($id, 'removed_by_user_id', true)) && in_array($user_id, $is_added['removed_by_user_id']) )  {
                         $hide = 'hide';
                         $total_hide++;
+                        echo '<div class="filter"><input type="checkbox" id="showAddedTask" /> Show Added Tasks</div>';
                   }
                   else {
                       $hide = '';

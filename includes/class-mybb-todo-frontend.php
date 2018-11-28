@@ -15,60 +15,61 @@ class Mybb_Todo_Frontend {
 		$this->task_completed = sanitize_text_field( get_option('notify_completed_task') );
 		$this->added_suggested_task = sanitize_text_field( get_option('added_suggested_task') );
 
-		if ( is_admin() ) {
+		add_action("wp_ajax_nopriv_mybbtodo_addpost", array( $this, 'addpost' ));
+    	add_action("wp_ajax_mybbtodo_addpost", array( $this, 'addpost' ));
 
-			add_action("wp_ajax_nopriv_mybbtodo_addpost", array( $this, 'mybbtodo_addpost' ));
-	    	add_action("wp_ajax_mybbtodo_addpost", array( $this, 'mybbtodo_addpost' ));
+    	add_action("wp_ajax_nopriv_mybbtodo_addsubpost", array( $this, 'addsubpost' ));
+    	add_action("wp_ajax_mybbtodo_addsubpost", array( $this, 'addsubpost' ));
 
-	    	add_action("wp_ajax_nopriv_mybbtodo_addsubpost", array( $this, 'mybbtodo_addsubpost' ));
-	    	add_action("wp_ajax_mybbtodo_addsubpost", array( $this, 'mybbtodo_addsubpost' ));
+		add_action("wp_ajax_nopriv_mybbtodo_editpost", array( $this, 'editpost' ));
+    	add_action("wp_ajax_mybbtodo_editpost", array( $this, 'editpost' ));
 
-			add_action("wp_ajax_nopriv_mybbtodo_editpost", array( $this, 'mybbtodo_editpost' ));
-	    	add_action("wp_ajax_mybbtodo_editpost", array( $this, 'mybbtodo_editpost' ));
+        add_action("wp_ajax_nopriv_mybbtodo_updateMenuOrder", array( $this, 'updateMenuOrder' ));
+    	add_action("wp_ajax_mybbtodo_updateMenuOrder", array( $this, 'updateMenuOrder' ));
 
-	        add_action("wp_ajax_nopriv_mybbtodo_updateMenuOrder", array( $this, 'mybbtodo_updateMenuOrder' ));
-	    	add_action("wp_ajax_mybbtodo_updateMenuOrder", array( $this, 'mybbtodo_updateMenuOrder' ));
+    	add_action("wp_ajax_nopriv_mybbtodo_deletepost", array( $this, 'deletepost' ));
+    	add_action("wp_ajax_mybbtodo_deletepost", array( $this, 'deletepost' ));
 
-	    	add_action("wp_ajax_nopriv_mybbtodo_deletepost", array( $this, 'mybbtodo_deletepost' ));
-	    	add_action("wp_ajax_mybbtodo_deletepost", array( $this, 'mybbtodo_deletepost' ));
+    	add_action("wp_ajax_nopriv_mybbtodo_completedpost", array( $this, 'completedpost' ));
+    	add_action("wp_ajax_mybbtodo_completedpost", array( $this, 'completedpost' ));
 
-	    	add_action("wp_ajax_nopriv_mybbtodo_completedpost", array( $this, 'mybbtodo_completedpost' ));
-	    	add_action("wp_ajax_mybbtodo_completedpost", array( $this, 'mybbtodo_completedpost' ));
+    	add_action("wp_ajax_nopriv_mybbtodo_undoCompletedpost", array( $this, 'undoCompletedpost' ));
+    	add_action("wp_ajax_mybbtodo_undoCompletedpost", array( $this, 'undoCompletedpost' ));
 
-	    	add_action("wp_ajax_nopriv_mybbtodo_undoCompletedpost", array( $this, 'mybbtodo_undoCompletedpost' ));
-	    	add_action("wp_ajax_mybbtodo_undoCompletedpost", array( $this, 'mybbtodo_undoCompletedpost' ));
+    	add_action("wp_ajax_nopriv_mybbtodo_getPostDetails", array( $this, 'getPostDetails' ));
+    	add_action("wp_ajax_mybbtodo_getPostDetails", array( $this, 'getPostDetails' ));
 
-	    	add_action("wp_ajax_nopriv_mybbtodo_getPostDetails", array( $this, 'mybbtodo_getPostDetails' ));
-	    	add_action("wp_ajax_mybbtodo_getPostDetails", array( $this, 'mybbtodo_getPostDetails' ));
-
-	    	add_action("wp_ajax_nopriv_mybbtodo_suggestedpost", array( $this, 'mybbtodo_suggestedpost' ));
-	    	add_action("wp_ajax_mybbtodo_suggestedpost", array( $this, 'mybbtodo_suggestedpost' ));
-
-	    	add_action("wp_ajax_nopriv_mmybbtodo_removeSuggestedpost", array( $this, 'mybbtodo_removeSuggestedpost' ));
-	    	add_action("wp_ajax_mybbtodo_removeSuggestedpost", array( $this, 'mybbtodo_removeSuggestedpost' ));
-
-	    	add_action("wp_ajax_nopriv_mybbtodo_duedate", array( $this, 'mybbtodo_duedate' ));
-	    	add_action("wp_ajax_mybbtodo_duedate", array( $this, 'mybbtodo_duedate' ));
-
-	    	add_action("wp_ajax_nopriv_mybbtodo_getposts", array( $this, 'mybbtodo_getposts' ));
-	    	add_action("wp_ajax_mybbtodo_getposts", array( $this, 'mybbtodo_getposts' ));
+    	add_action("wp_ajax_nopriv_mybbtodo_backSuggestedpost", array( $this, 'backSuggestedPost' ));
+    	add_action("wp_ajax_mybbtodo_backSuggestedpost", array( $this, 'backSuggestedPost' ));
 
 
-	    	add_action("wp_ajax_nopriv_getMember_posts", array( $this, 'getMember_posts' ));
-	    	add_action("wp_ajax_getMember_posts", array( $this, 'getMember_posts' ));
-
-	    	add_action("wp_ajax_nopriv_add_member_task", array( $this, 'add_member_task' ));
-	    	add_action("wp_ajax_add_member_task", array( $this, 'add_member_task' ));
+    	add_action("wp_ajax_nopriv_mybbtodo_moveSuggestedPost", array( $this, 'suggestedpost' ));
+    	add_action("wp_ajax_mybbtodo_moveSuggestedPost", array( $this, 'suggestedpost' ));
 
 
-	    	add_action("wp_ajax_nopriv_mybbtodo_completedsubpost", array( $this, 'mybbtodo_completedsubpost' ));
-	    	add_action("wp_ajax_mybbtodo_completedsubpost", array( $this, 'mybbtodo_completedsubpost' ));
+    	add_action("wp_ajax_nopriv_mmybbtodo_removeSuggestedpost", array( $this, 'removeSuggestedpost' ));
+    	add_action("wp_ajax_mybbtodo_removeSuggestedpost", array( $this, 'removeSuggestedpost' ));
+
+    	add_action("wp_ajax_nopriv_mybbtodo_duedate", array( $this, 'duedate' ));
+    	add_action("wp_ajax_mybbtodo_duedate", array( $this, 'duedate' ));
+
+    	add_action("wp_ajax_nopriv_mybbtodo_getposts", array( $this, 'getposts' ));
+    	add_action("wp_ajax_mybbtodo_getposts", array( $this, 'getposts' ));
 
 
-	    	add_action("wp_ajax_nopriv_mybbtodo_deletesubtask", array( $this, 'mybbtodo_deletesubtask' ));
-	    	add_action("wp_ajax_mybbtodo_deletesubtask", array( $this, 'mybbtodo_deletesubtask' ));
+    	add_action("wp_ajax_nopriv_getMember_posts", array( $this, 'getMember_posts' ));
+    	add_action("wp_ajax_getMember_posts", array( $this, 'getMember_posts' ));
 
-		}
+    	add_action("wp_ajax_nopriv_add_member_task", array( $this, 'add_member_task' ));
+    	add_action("wp_ajax_add_member_task", array( $this, 'add_member_task' ));
+
+
+    	add_action("wp_ajax_nopriv_mybbtodo_completedsubpost", array( $this, 'completedsubpost' ));
+    	add_action("wp_ajax_mybbtodo_completedsubpost", array( $this, 'completedsubpost' ));
+
+
+    	add_action("wp_ajax_nopriv_mybbtodo_deletesubtask", array( $this, 'deletesubtask' ));
+    	add_action("wp_ajax_mybbtodo_deletesubtask", array( $this, 'deletesubtask' ));
     	
 	}
 
@@ -77,7 +78,7 @@ class Mybb_Todo_Frontend {
 	*
 	*
 	*/
-	function mybbtodo_completedsubpost() {
+	function completedsubpost() {
 
 		if ( !is_user_logged_in() ){
 				wp_send_json_error('you are not allowed');
@@ -104,7 +105,6 @@ class Mybb_Todo_Frontend {
 	    		));
 			}
 					
-		
 	}
 
 
@@ -192,7 +192,7 @@ class Mybb_Todo_Frontend {
 	*  Get Subtask of the members 
 	*  @return posted data
 	*/
-	function mybbtodo_getposts () {
+	function getposts () {
 
 			 global $wpdb;
 
@@ -267,7 +267,6 @@ class Mybb_Todo_Frontend {
 		    		));
 				}
 				exit;
-
 
 	}
 
@@ -369,7 +368,7 @@ class Mybb_Todo_Frontend {
 			}			
 	}
 
-	function mybbtodo_addpost() {
+	function addpost() {
 
 				if ( !is_user_logged_in() ){
 						wp_send_json_error('you are not allowed');
@@ -461,7 +460,7 @@ class Mybb_Todo_Frontend {
 					
 	}
 
-	function mybbtodo_addsubpost() {
+	function addsubpost() {
 
 				if ( !is_user_logged_in() ){
 						wp_send_json_error('you are not allowed');
@@ -541,13 +540,10 @@ class Mybb_Todo_Frontend {
 				      		'date' => $formatted_date
 			    		));
 					}
-		}	
-
-
-						
+		}						
 	}
 
-	function mybbtodo_editpost() {
+	function editpost() {
 
 				if ( !is_user_logged_in() ){
 						wp_send_json_error('you are not allowed');
@@ -624,7 +620,7 @@ class Mybb_Todo_Frontend {
 						
 	}
 
-	function mybbtodo_completedpost() {
+	function completedpost() {
 
 				if ( !is_user_logged_in() ){
 						wp_send_json_error('you are not allowed');
@@ -705,7 +701,7 @@ class Mybb_Todo_Frontend {
 				exit;		
 	}
 
-		function mybbtodo_undoCompletedpost() {
+	function undoCompletedpost() {
 
 				if ( !is_user_logged_in() ){
 						wp_send_json_error('you are not allowed');
@@ -775,11 +771,58 @@ class Mybb_Todo_Frontend {
 				      		'content' => $content
 			    		));
 					}
-			exit;	
-
-						
+			exit;						
 	}
-	function mybbtodo_getPostDetails() {
+
+	function backSuggestedPost() {
+
+		if ( !is_user_logged_in() ){
+			wp_send_json_error('you are not allowed');
+		}
+
+		if (!isset( $_POST['id'] ) ) {
+
+			wp_send_json_error(array(
+      			'message' => 'Error checking post'
+    		));
+		}
+
+		$success_security = check_ajax_referer( 'todo_post_once', 'security' );
+
+        $post_id = (int)$_POST['id'];
+     	$user_id = get_current_user_id();
+        $suggested_id = get_post_meta( $post_id, 'suggested_id', true );
+
+        if($user_id) {
+        	$deleted = delete_post_meta( $suggested_id, '_user_id', $user_id );
+    	}
+    	//delete subtask and task from the user's list
+		$status = wp_delete_post( absint($post_id), true); 
+
+		delete_post_meta((int)$post_id, 'completed_subtask');
+		delete_post_meta((int)$post_id, 'subtask_from');
+
+		if( !$suggested_id && !$deleted ) {
+
+			wp_send_json_error(array(
+      			'message' => 'Error retrieving post'
+    		));
+
+		}
+		else {
+
+			wp_send_json_success(array(
+	      		'message' => 'successfully retrieve data',
+	      		'suggested_id' => $suggested_id,
+	      		'user' => $user_id
+    		));
+
+		}
+	
+		exit;
+
+	}
+	function getPostDetails() {
 
 				if ( !is_user_logged_in() ){
 						wp_send_json_error('you are not allowed');
@@ -826,48 +869,44 @@ class Mybb_Todo_Frontend {
 				}
 			
 			exit;
-
-						
 	}
-	function mybbtodo_updateMenuOrder() {
+	function updateMenuOrder() {
 				
-				if ( !is_user_logged_in() ){
-						wp_send_json_error('you are not allowed');
-				}
+
+			if ( !is_user_logged_in() ){
+					wp_send_json_error('you are not allowed');
+			}
+		
+
+			if ( !isset( $_POST['security'] ) || ! wp_verify_nonce( $_POST['security'], 'todo_sort_nonce' ) ) {
+
+					wp_send_json_error(array(
+					'message' => 'Nonce verification failed'
+					));
+
+			}
 			
 
-				if ( !isset( $_POST['security'] ) || ! wp_verify_nonce( $_POST['security'], 'todo_sort_nonce' ) ) {
 
-						wp_send_json_error(array(
-						'message' => 'Nonce verification failed'
-						));
+            $order = $_POST['order'];
+            $count = 0;
 
-				}
-				
+            foreach($order as $item_id) {
 
+            	$post = array(
+            		 	  'ID' => (int)$item_id,
+            		 	  'menu_order' => $count,
 
-                $order = $_POST['order'];
-                $count = 0;
+            		);
 
-                foreach($order as $item_id) {
+            	wp_update_post( $post );
 
-                	$post = array(
-                		 	  'ID' => (int)$item_id,
-                		 	  'menu_order' => $count,
+            	$count++;
 
-                		);
-
-                	wp_update_post( $post );
-
-                	$count++;
-
-                }
-      
-			 
-					
-
+            }
+      		 				
 	}
-	function mybbtodo_duedate() {
+	function duedate() {
 		if ( !is_user_logged_in() ){
 				wp_send_json_error('you are not allowed');
 		}
@@ -898,7 +937,7 @@ class Mybb_Todo_Frontend {
 
 	}
 
-	function mybbtodo_deletesubtask() {
+	function deletesubtask() {
 		
 
 			if ( !is_user_logged_in() ){
@@ -936,8 +975,7 @@ class Mybb_Todo_Frontend {
 
 	}
 
-
-	function mybbtodo_deletepost() {
+	function deletepost() {
 		
 
 			if ( !is_user_logged_in() ){
@@ -977,12 +1015,10 @@ class Mybb_Todo_Frontend {
 				}
 			
 			exit;
-
-					 
-				
+				 			
 	}
 
-	function mybbtodo_removeSuggestedpost() {
+	function removeSuggestedpost() {
 		
 			if ( !is_user_logged_in() ){
 					wp_send_json_error('you are not allowed');
@@ -1014,7 +1050,7 @@ class Mybb_Todo_Frontend {
 				
 	}
 
-	function mybbtodo_suggestedpost() {
+	function suggestedpost() {
 
 		if ( !is_user_logged_in() ){
 				wp_send_json_error('you are not allowed');
@@ -1133,6 +1169,5 @@ class Mybb_Todo_Frontend {
 		}
 	}
 
-   
-
+  
 }

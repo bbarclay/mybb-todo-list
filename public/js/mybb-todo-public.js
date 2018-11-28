@@ -89,9 +89,7 @@
             })
 
 	/* ==============================================
-
 		(SUBTASKS) Add Sub Task
-
 	============================================== */
 	$('#task-list').on('click', '.task-row .close-mtask', function(){
 		 var id = findParentID(this);
@@ -103,16 +101,50 @@
 
 	});
 
+	$('#showAddedTask').on('click', function(){
+
+			$('#task-suggested').find('li.hide').toggleClass('show-item');
+	});
+
+	/* ==============================================
+		(SUBTASKS) Added back to suggested list
+	============================================== */
+	$('#task-list').on('click', 'li .btn-suggest', function(){
+
+		var id = $(this).closest('li').attr('id');
+
+		var is_confirm = confirm("By moving this task back to the suggested tasks will delete this task on your own list and its subtasks");
+
+		if( is_confirm == true ) {
+			$('.wrap-task .loading').addClass('show');
+			$.ajax({
+		 		url: mybb_ajax.ajaxurl,
+		        type: 'post',
+		        dataType: 'json',
+		        data: {
+		            action: 'mybbtodo_backSuggestedpost',
+		            id: id,
+		            security: mybb_ajax.security
+		        },
+		        success: function(data, textStatus, XMLHttpRequest) {
+		        	location.reload();
+		        },
+		        error: function(error){
+		        	console.log(error);
+		        }
+		    });
+
+		}
+
+	});
 
     $('#task-list').on('click', 'li .btn-add', function(){
 
-    		var id = findParentID(this);
-console.log('test');
+		var id = findParentID(this);
 
-		    if(!isDoing ) {
-		    	isDoing = true;
-			
-			}
+	    if(!isDoing ) {
+	    	isDoing = true;
+		}
 
     	if ( !$('#' + id).find('.subtasks').hasClass('is_show') )	{
 
@@ -139,35 +171,27 @@ console.log('test');
 							var obj = JSON.stringify(tasks);
 								obj = JSON.parse(obj);
 
-
 							var count = 0;
 
 							$.each( obj,function( x, task ) 
 							{
 				
-
 								// Generate Subtask Lists
 								var list = create_subtask_lists( task['title'], task['content'], task['date'], task['ID'], task['is_complete'] );
 								
 								$('#' + id).find('.subtask-lists').append(list);
 
-
 							});	
-
 						}	
-
 
 						$('#' + id).find('.subtasks').addClass('is_show');
 						$('#' + id + ' .btn-col .btn-add').removeClass('noclick');
 						isDoing = false;
-			 
-			          
+
 			        },
-			 
 			        error: function(MLHttpRequest, textStatus, errorThrown) {
 			            alert(errorThrown);
 			        }
-			 
 			});	
 
 		}
@@ -184,8 +208,6 @@ console.log('test');
     $('#task-list').on('click', ' li .close-form', function(){
     	togglingHide(this, '.pre-subtask');
     	togglingShow(this, '.add-task'); 
- 
-
     });
 
      function togglingShow(event, subject) {
@@ -201,6 +223,7 @@ console.log('test');
 
      	return id;
      }	
+
      /*  Creating subtask lists
       *
       */
@@ -298,8 +321,6 @@ console.log('test');
 
 
 								if(data.data.only_list == '') {
-									//show_action_message(data.data.message);
-									
 
 									remove_notification('completed-task');
 
@@ -1567,7 +1588,7 @@ task_list.on('click', '.btn-cancel', function(event){
 	Tick Box to add Suggested Task
 
 ============================================== */
-
+	
 
 	suggested_list.on('click', '.tick-box .btn', function(){
 
@@ -1605,7 +1626,7 @@ task_list.on('click', '.btn-cancel', function(event){
 			        type: 'post',
 			        dataType: 'json',
 			        data: {
-			            action: 'mybbtodo_suggestedpost',
+			            action: 'mybbtodo_moveSuggestedPost',
 			            id: id,
 			            only_list: only_list,
 			            title: title,
@@ -2034,7 +2055,7 @@ task_list.on('click', '.btn-cancel', function(event){
 					start_time = '', date_start = '', task_notes = '', end_time = '',
 					view_more = '', end_wrap = '', task_end = '', holder_end = '', end = '',
 					button_start = '', btn_edit = '', btn_delete = '', button_end = '', 
-					holder_end = '', end = '', arrow = '', add_option = '', start, btn_add = '', subtasks = '';
+					holder_end = '', end = '', arrow = '', add_option = '', start, btn_suggest = '', btn_add = '', subtasks = '';
 		    	
 
 		    	 start = '<li class="task-row test ui-sortable-handle" id="'+ id +'"">';
@@ -2060,6 +2081,7 @@ task_list.on('click', '.btn-cancel', function(event){
 
 
 		    	   			   button_start = '<div class="btn-col">';
+                                    btn_suggest = '<span class="btn-suggest w-tip"><i class="tooltip">Add back to suggested tasks</i><span class="fa fa-undo"></span></span>';            
 		    	   			   		btn_add = '<span class="btn-add w-tip"><i class="tooltip">Subtasks</i><span class="fa fa-outdent"></span></span>';
 		    	   			        btn_edit = '<span class="btn-edit w-tip"><i class="tooltip">Edit Task</i><span class="fa fa-pencil"></span></span>';
 		    	   			        btn_delete = '<span class="btn-delete w-tip"><i class="tooltip">Delete Task</i><span class="fa fa-trash"></span></span>';
@@ -2067,7 +2089,7 @@ task_list.on('click', '.btn-cancel', function(event){
 		    	   		holder_end = '</div>';    	   		
 		    	 end = '</li>';
 
-		    	 function add_link () {
+		    	function add_link () {
 			    	 if( link != '' ) {
 			    	 	add_link = '<p class="link">' + link + '</p>'
 			    	 }
@@ -2077,34 +2099,33 @@ task_list.on('click', '.btn-cancel', function(event){
 			    	 return add_link;
 		    	}
 
-		    	 if( due_date == '' ) {
+		    	if( due_date == '' ) {
 		    	 	add_option = '<span class="addText auto-date d">Add due date</span>';
 		    	 	add_option += '<span class="date text-date hide">Due </span>';
 		    	 	add_option += '<input type="text" class="datepicker select-' + id + ' " dateid="' + id + '">';
 		    	 	add_option += '<input type="hidden" class="alternate long-format-' + id + '"> <button class="submitDate">Submit</button>';
 		    	 
-		    	 } else {
+		    	} else {
 
-		    	 }
+		    	}
 
 
-		    	 function add_view_more() {
+		    	function add_view_more() {
 		    	 	if(content != '') {
 		    	 		view_more = '<span class="view-more">more...</span> ';
 		    	 	} else {
 		    	 		view_more = '';
 		    	 	}
 		    	 	return view_more;
-		    	 }
+		    	}
 		    	function add_notes() {
 		    	 	if(content != '') {
 		    	 		task_notes = '<div class="details">'+ nl2br(content) +'</div>';
 		    	 	} else {
 		    	 		task_notes = '';
 		    	 	}
-
 		    	 	return task_notes;
-		    	 }
+		    	}
 		
 
 
@@ -2118,7 +2139,7 @@ task_list.on('click', '.btn-cancel', function(event){
 		 		   output += add_notes();
 		 		  output +=  end_wrap + subtasks + task_end;
 
-		 		  output += button_start + btn_add + btn_edit + btn_delete + button_end;
+		 		  output += button_start + btn_suggest + btn_add + btn_edit + btn_delete + button_end;
 		 		output += holder_end + end;
 		 		
 		 		return output;  
