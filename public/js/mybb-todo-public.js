@@ -101,7 +101,7 @@
 
 	});
 
-	$('#showAddedTask').on('click', function(){
+	$(document).on('click', '#showAddedTask', function(){
 
 			$('#task-suggested').find('li.hide').toggleClass('show-item');
 	});
