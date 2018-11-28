@@ -245,7 +245,7 @@
 
                         $hide = 'hide';
                         $total_hide++;
-                        echo '<div class="filter"><input type="checkbox" id="showAddedTask" /> Show Added Tasks</div>';
+                        echo '<div class="filter"><input type="checkbox" id="showAddedTask" /> Show added tasks</div>';
                   }
                   else {
                       $hide = '';
