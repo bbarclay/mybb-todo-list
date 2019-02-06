@@ -168,7 +168,7 @@ class Mybb_Todo_Public {
         	'ajaxurl' => admin_url( 'admin-ajax.php' ), 
         	'security' => wp_create_nonce('todo_sort_nonce') 
 		) );
-		wp_enqueue_script( $this->plugin_name . 'validation', 'http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js', array( 'jquery' ) );
+		wp_enqueue_script( $this->plugin_name . 'validation', 'https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js', array( 'jquery' ) );
 
 		wp_enqueue_script( $this->plugin_name . '-date-picker', 'https://code.jquery.com/ui/1.12.1/jquery-ui.js', array( 'jquery' ) );
 
